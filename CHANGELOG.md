@@ -1,3 +1,16 @@
+<a name="3.4.0"></a>
+# [3.4.0](https://github.com/riseart/aws-serverless-express/compare/v3.3.5...v3.4.0) (2019-05-08)
+
+
+### Bug Fixes
+
+* delete transfer-encoding from headers when event is from api g ([c83a5b1](https://github.com/riseart/aws-serverless-express/commit/c83a5b1))
+
+
+### Features
+
+* supports alb integration ([a3dd64d](https://github.com/riseart/aws-serverless-express/commit/a3dd64d))
+
 <a name="3.3.5"></a>
 ## [3.3.5](https://github.com/awslabs/aws-serverless-express/compare/v3.3.4...v3.3.5) (2018-08-20)
 
