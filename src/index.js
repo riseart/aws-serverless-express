@@ -17,12 +17,31 @@ const http = require('http')
 const url = require('url')
 const binarycase = require('binary-case')
 const isType = require('type-is')
+const querystring = require('querystring');
 
 function getPathWithQueryStringParams (event) {
   return url.format({ pathname: event.path, query: event.queryStringParameters })
 }
 function getEventBody (event) {
   return Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8')
+}
+
+/**
+ * decodeQueryStringParams
+ *
+ * @param {Object} queryStringParameters
+ * @returns {Object} decoded queryString parameters
+ */
+function decodeQueryStringParams (queryStringParameters) {
+  if (!queryStringParameters || typeof queryStringParameters !== 'object') {
+    return queryStringParameters;
+  }
+
+  const qs = Object.keys(queryStringParameters)
+    .map((key) => `${key}=${queryStringParameters[key]}`)
+    .join('&');
+  // parse() will also decode the parameters
+  return querystring.parse(qs);
 }
 
 function clone (json) {
@@ -67,6 +86,12 @@ function mapApiGatewayEventToHttpRequest (event, context, socketPath) {
 
 function mapALBEventToHttpRequest (event, context, socketPath) {
   const headers = Object.assign({}, event.headers)
+
+  // Fix double encoded queryStringParameters issue
+  // as described here https://github.com/awslabs/aws-serverless-express/issues/219
+  if (event.queryStringParameters) {
+    event.queryStringParameters = decodeQueryStringParams(event.queryStringParameters);
+  }
 
   const clonedEventWithoutBody = clone(event)
   delete clonedEventWithoutBody.body
