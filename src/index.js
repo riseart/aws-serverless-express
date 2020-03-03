@@ -179,9 +179,11 @@ function forwardLibraryErrorResponseToEndpoint (error, resolver) {
 function forwardRequestToNodeServer (server, event, context, resolver) {
   try {
     let requestOptions
-    if (event.requestContext && event.requestContext.elb) { // from ALB
+    if (event.requestContext && event.requestContext.elb) {
+      // from ALB
       requestOptions = mapALBEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
-    } else { // from API Gateway
+    } else {
+      // from API Gateway
       requestOptions = mapApiGatewayEventToHttpRequest(event, context, getSocketPath(server._socketPathSuffix))
     }
 
